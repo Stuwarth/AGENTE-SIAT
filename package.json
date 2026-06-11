@@ -1,23 +1,40 @@
 {
   "name": "agente-siat",
   "version": "1.0.0",
-  "description": "",
+  "description": "Servidor MCP para Facturación Electrónica del SIAT (Bolivia)",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc --watch",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "node dist/server.js"
+    "eval": "tsx tests/evals/eval.ts",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/server.js"
   },
+  "keywords": [
+    "mcp",
+    "siat",
+    "facturacion",
+    "bolivia",
+    "impuestos"
+  ],
+  "author": "Equipo Agentic SIAT",
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^3.23.8"
+    "dotenv": "^17.4.2",
+    "xml-crypto": "^6.1.2",
+    "xml2js": "^0.6.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.9",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.5",
-    "typescript": "^5.5.3"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.3",
+    "@types/xml2js": "^0.4.14",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
   }
 }
