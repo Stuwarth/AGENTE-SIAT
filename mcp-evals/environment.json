@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "agentic-siat": {
+      "command": "node",
+      "args": ["./dist/server.js"],
+      "env": {
+        "SIAT_AMBIENTE": "simulador",
+        "SIAT_NIT": "123456789",
+        "SIAT_CODIGO_SUCURSAL": "0",
+        "SIAT_CODIGO_PUNTO_VENTA": "0"
+      }
+    }
+  }
+}

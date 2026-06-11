@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Test Verificar Conexión SIAT",
+    "prompt": "Verifica si la conexión con el servidor del SIAT de Impuestos Nacionales de Bolivia está activa y funciona.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "verificar_conexion_siat"
+      }
+    ]
+  },
+  {
+    "name": "Test Obtener CUIS",
+    "prompt": "Solicita y obtén el código de inicio de sistemas CUIS necesario para facturar.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "obtener_cuis"
+      }
+    ]
+  },
+  {
+    "name": "Test Obtener CUFD",
+    "prompt": "Genera el código único de facturación diaria CUFD para hoy.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "obtener_cufd"
+      }
+    ]
+  },
+  {
+    "name": "Test Sincronizar Productos",
+    "prompt": "Sincroniza el catálogo de productos y servicios homologados por impuestos.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "sincronizar_catalogos"
+      }
+    ]
+  },
+  {
+    "name": "Test Emitir Factura Electrónica",
+    "prompt": "Emite una factura de compra-venta por 150 Bs para el cliente Carlos Perez con CI 7654321. Código de producto 83111 (Desarrollo software).",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "emitir_factura"
+      }
+    ]
+  }
+]
