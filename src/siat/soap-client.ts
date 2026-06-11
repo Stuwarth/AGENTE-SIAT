@@ -3,6 +3,8 @@ import { siatSimulator } from './siat-simulator.js';
 import { EmitirFacturaInput, AnularFacturaInput } from '../schemas/factura.js';
 import { compressAndHash } from './gzip-handler.js';
 import { signXml } from './xml-signer.js';
+import { roundHalfUp } from './utils.js';
+
 
 export interface SiatClientResponse {
   transaccion: boolean;
@@ -173,15 +175,15 @@ export class SiatSoapClient {
       <codigoProductoSin>${d.codigoProductoSin}</codigoProductoSin>
       <codigoProducto>${d.codigoProducto}</codigoProducto>
       <descripcion>${d.descripcion}</descripcion>
-      <cantidad>${d.cantidad}</cantidad>
+      <cantidad>${roundHalfUp(d.cantidad)}</cantidad>
       <unidadMedida>${d.codigoUnidadMedida}</unidadMedida>
-      <precioUnitario>${d.precioUnitario}</precioUnitario>
-      <montoDescuento>${d.montoDescuento || 0}</montoDescuento>
-      <subTotal>${d.subTotal}</subTotal>
+      <precioUnitario>${roundHalfUp(d.precioUnitario)}</precioUnitario>
+      <montoDescuento>${roundHalfUp(d.montoDescuento || 0)}</montoDescuento>
+      <subTotal>${roundHalfUp(d.subTotal)}</subTotal>
     </detalle>`).join('');
 
     return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<facturaElectronicaCompraVenta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd">
+<facturaElectronicaCompraVenta Id="factura" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd">
   <cabecera>
     <nitEmisor>${input.nitEmisor}</nitEmisor>
     <razonSocialEmisor>${input.razonSocialEmisor}</razonSocialEmisor>
@@ -199,12 +201,12 @@ export class SiatSoapClient {
     <codigoCliente>${input.codigoCliente}</codigoCliente>
     <codigoMetodoPago>${input.codigoMetodoPago}</codigoMetodoPago>
     ${input.numeroTarjeta ? `<numeroTarjeta>${input.numeroTarjeta}</numeroTarjeta>` : ''}
-    <montoTotal>${input.montoTotal}</montoTotal>
-    <montoTotalSujetoIva>${input.montoTotal}</montoTotalSujetoIva>
+    <montoTotal>${roundHalfUp(input.montoTotal)}</montoTotal>
+    <montoTotalSujetoIva>${roundHalfUp(input.montoTotal)}</montoTotalSujetoIva>
     <codigoMoneda>${input.codigoMoneda}</codigoMoneda>
-    <tipoCambio>${input.tipoCambio}</tipoCambio>
-    <montoTotalMoneda>${input.montoTotal * input.tipoCambio}</montoTotalMoneda>
-    <montoDescuentoAdicional>${input.montoDescuentoAdicional || 0}</montoDescuentoAdicional>
+    <tipoCambio>${roundHalfUp(input.tipoCambio, 4)}</tipoCambio>
+    <montoTotalMoneda>${roundHalfUp(input.montoTotal * input.tipoCambio)}</montoTotalMoneda>
+    <montoDescuentoAdicional>${roundHalfUp(input.montoDescuentoAdicional || 0)}</montoDescuentoAdicional>
     <codigoLeyenda>58</codigoLeyenda>
     <leyenda>Ley N° 453: El proveedor debe suministrar el servicio en las condiciones acordadas.</leyenda>
     <usuario>cbb-operador</usuario>
@@ -213,4 +215,5 @@ export class SiatSoapClient {
   ${detallesXml}
 </facturaElectronicaCompraVenta>`;
   }
+
 }

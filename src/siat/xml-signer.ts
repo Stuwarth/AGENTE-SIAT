@@ -18,8 +18,9 @@ export function signXml(xmlContent: string, certPath?: string, certPassword?: st
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
       <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-      <Reference URI="">
+      <Reference URI="#factura">
         <Transforms>
+
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
           <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
         </Transforms>
@@ -59,7 +60,7 @@ export function signXml(xmlContent: string, certPath?: string, certPassword?: st
     // Si tenemos un certificado real, realizar firma real usando xml-crypto
     const sig = new SignedXml();
     sig.addReference({
-      xpath: "//*[local-name()='facturaComputarizadaCompraVenta' or local-name()='facturaElectronicaCompraVenta']",
+      xpath: "//*[@Id='factura']",
       transforms: [
         "http://www.w3.org/2000/09/xmldsig#enveloped-signature",
         "http://www.w3.org/2001/10/xml-exc-c14n#"

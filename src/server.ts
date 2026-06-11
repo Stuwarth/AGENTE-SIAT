@@ -1,5 +1,9 @@
+// Redirigir console.log a console.error inmediatamente para proteger el canal stdout de JSON-RPC
+console.log = console.error;
+
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
 import {
   CallToolRequestSchema,
   ErrorCode,
@@ -38,6 +42,21 @@ class AgenticSiatServer {
     
     // Registrar manejador de errores de proceso
     this.server.onerror = (error) => console.error('[MCP Error]', error);
+
+    // Escuchar excepciones y rechazos no capturados globales para evitar caídas del proceso
+    process.on('uncaughtException', (error) => {
+      console.error('[CRITICAL UNCAUGHT EXCEPTION] El servidor MCP evitó una caída:', error);
+    });
+
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('[CRITICAL UNHANDLED REJECTION] Promesa rechazada sin manejar en:', promise, 'razón:', reason);
+    });
+
+    // Controlar apagado limpio
+    process.on('SIGINT', () => {
+      console.error('Cerrando servidor Agentic SIAT de forma ordenada...');
+      process.exit(0);
+    });
   }
 
   private registerTools() {

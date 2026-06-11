@@ -1,5 +1,7 @@
 import { CufInputs, generarCUF } from './cuf-generator.js';
 import { EmitirFacturaInput, AnularFacturaInput } from '../schemas/factura.js';
+import { roundHalfUp } from './utils.js';
+
 
 export interface FacturaRegistrada {
   cuf: string;
@@ -140,23 +142,25 @@ class SiatSimulator {
     // Validar montos del detalle
     let sumaSubtotales = 0;
     for (const item of input.detalles) {
-      const expectedSubtotal = item.cantidad * item.precioUnitario - (item.montoDescuento || 0);
-      if (Math.abs(item.subTotal - expectedSubtotal) > 0.01) {
+      const expectedSubtotal = parseFloat(roundHalfUp(item.cantidad * item.precioUnitario - (item.montoDescuento || 0)));
+      const subtotalFormatted = parseFloat(roundHalfUp(item.subTotal));
+      if (Math.abs(subtotalFormatted - expectedSubtotal) > 0.01) {
         return {
           transaccion: false,
           codigo: 910,
-          descripcion: `MONTO DE SUB-TOTAL INCORRECTO EN ITEM CON CODIGO ${item.codigoProducto}. Esperado: ${expectedSubtotal.toFixed(2)}, Recibido: ${item.subTotal.toFixed(2)}`
+          descripcion: `MONTO DE SUB-TOTAL INCORRECTO EN ITEM CON CODIGO ${item.codigoProducto}. Esperado: ${expectedSubtotal.toFixed(2)}, Recibido: ${subtotalFormatted.toFixed(2)}`
         };
       }
-      sumaSubtotales += item.subTotal;
+      sumaSubtotales += subtotalFormatted;
     }
 
-    const expectedTotal = sumaSubtotales - (input.montoDescuentoAdicional || 0);
-    if (Math.abs(input.montoTotal - expectedTotal) > 0.01) {
+    const expectedTotal = parseFloat(roundHalfUp(sumaSubtotales - (input.montoDescuentoAdicional || 0)));
+    const totalFormatted = parseFloat(roundHalfUp(input.montoTotal));
+    if (Math.abs(totalFormatted - expectedTotal) > 0.01) {
       return {
         transaccion: false,
         codigo: 912,
-        descripcion: `MONTO TOTAL DE FACTURA NO COINCIDE CON LA SUMATORIA DE DETALLES. Calculado: ${expectedTotal.toFixed(2)}, Recibido: ${input.montoTotal.toFixed(2)}`
+        descripcion: `MONTO TOTAL DE FACTURA NO COINCIDE CON LA SUMATORIA DE DETALLES. Calculado: ${expectedTotal.toFixed(2)}, Recibido: ${totalFormatted.toFixed(2)}`
       };
     }
 

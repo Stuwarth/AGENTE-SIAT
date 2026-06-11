@@ -48,5 +48,25 @@
         "value": "emitir_factura"
       }
     ]
+  },
+  {
+    "name": "Test Consultar Estado Factura",
+    "prompt": "Verifica el estado actual de la factura con CUF 4A2E7F3D010C7392B104F3E8A7.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "consultar_estado"
+      }
+    ]
+  },
+  {
+    "name": "Test Anular Factura SIAT",
+    "prompt": "Anula la factura con CUF 4A2E7F3D010C7392B104F3E8A7 por motivo de datos de emisión incorrectos.",
+    "assertions": [
+      {
+        "type": "tool_called",
+        "value": "anular_factura"
+      }
+    ]
   }
 ]
