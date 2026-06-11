@@ -1,6 +1,4 @@
-// Redirigir console.log a console.error inmediatamente para proteger el canal stdout de JSON-RPC
-console.log = console.error;
-
+import './instrument.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
